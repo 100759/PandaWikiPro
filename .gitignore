@@ -33,3 +33,9 @@ local
 
 .idea
 __debug*
+
+# 本地定制部署产物
+patched-deploy/.env
+patched-deploy/panda-wiki-api*
+patched-deploy/admin-dist
+patched-deploy/data
