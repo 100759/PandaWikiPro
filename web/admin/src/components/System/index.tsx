@@ -7,12 +7,16 @@ import { IconAChilunshezhisheding } from '@panda-wiki/icons';
 import { Box, Button, Tab, Tabs, useTheme } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
 
+import Brand from './component/Brand';
 import Member from './component/Member';
 import ModelConfig, { ModelConfigRef } from './component/ModelConfig';
+import Upgrade from './component/Upgrade';
 
 const SystemTabs = [
   { label: '模型配置', id: 'model-config' },
   { label: '用户管理', id: 'user-management' },
+  { label: '站点设置', id: 'site' },
+  { label: '版本升级', id: 'upgrade' },
 ];
 
 const System = () => {
@@ -145,6 +149,16 @@ const System = () => {
         {activeTab === 'user-management' && (
           <Box>
             <Member />
+          </Box>
+        )}
+        {activeTab === 'site' && (
+          <Box>
+            <Brand />
+          </Box>
+        )}
+        {activeTab === 'upgrade' && (
+          <Box>
+            <Upgrade />
           </Box>
         )}
         {activeTab === 'model-config' && (

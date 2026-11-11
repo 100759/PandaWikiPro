@@ -22,6 +22,7 @@ export interface config {
   refreshAdminRequest: () => void;
   isRefreshDocList: boolean;
   isCreateWikiModalOpen: boolean;
+  siteBrand: { site_name: string; site_icon: string };
 }
 
 const initialState: config = {
@@ -46,6 +47,7 @@ const initialState: config = {
   refreshAdminRequest: () => {},
   isRefreshDocList: false,
   isCreateWikiModalOpen: false,
+  siteBrand: { site_name: 'PandaWiki', site_icon: '' },
 };
 
 const configSlice = createSlice({
@@ -99,6 +101,9 @@ const configSlice = createSlice({
     setIsCreateWikiModalOpen(state, { payload }) {
       state.isCreateWikiModalOpen = payload;
     },
+    setSiteBrand(state, { payload }) {
+      state.siteBrand = payload;
+    },
   },
 });
 
@@ -116,5 +121,6 @@ export const {
   setModelList,
   setIsRefreshDocList,
   setIsCreateWikiModalOpen,
+  setSiteBrand,
 } = configSlice.actions;
 export default configSlice.reducer;

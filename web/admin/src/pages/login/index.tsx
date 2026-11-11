@@ -1,4 +1,6 @@
 import { postApiV1UserLogin } from '@/request/User';
+import { useAppSelector } from '@/store';
+import { getBasePath } from '@/utils/getBasePath';
 import Bgi from '@/assets/images/login-bgi.png';
 import Logo from '@/assets/images/logo.png';
 import Avatar from '@/components/Avatar';
@@ -18,6 +20,7 @@ import {
 
 const Login = () => {
   const navigate = useNavigate();
+  const { siteBrand } = useAppSelector(state => state.config);
   const [searchParams] = useURLSearchParams();
   const redirect = searchParams.get('redirect') || '/';
   const [account, setAccount] = useState('');
@@ -72,7 +75,12 @@ const Login = () => {
           }}
         >
           <Stack alignItems={'center'}>
-            <Avatar src={Logo} sx={{ width: 64, height: 64, mb: 1 }} />
+            <Avatar
+              src={
+                siteBrand.site_icon ? getBasePath(siteBrand.site_icon) : Logo
+              }
+              sx={{ width: 64, height: 64, mb: 1 }}
+            />
             <Stack
               direction={'row'}
               alignItems={'center'}
@@ -84,7 +92,7 @@ const Login = () => {
                 mb: 4,
               }}
             >
-              PandaWiki
+              {siteBrand.site_name || 'PandaWiki'}
             </Stack>
             <TextField
               value={account}

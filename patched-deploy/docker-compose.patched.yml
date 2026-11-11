@@ -1,4 +1,4 @@
-# PandaWiki 部署（官方 compose + 打补丁的 api 二进制 + 自编译 admin 前端）
+# PandaWiki 已解锁部署（在原官方 compose 基础上，仅把 api 容器换成打过补丁的二进制）
 services:
   caddy:
     container_name: panda-wiki-caddy
@@ -16,13 +16,14 @@ services:
         ipv4_address: "${SUBNET_PREFIX:-169.254.15}.5"
   nginx:
     container_name: panda-wiki-nginx
-    depends_on: [api]
+    depends_on: [api, sidecar]
     restart: always
     image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/chaitin/panda-wiki-nginx:v3.87.5
     ports:
       - ${ADMIN_PORT:-2443}:8080
     volumes:
       - ./admin-dist:/opt/frontend/dist:ro
+      - ./nginx/server.conf:/etc/nginx/conf.d/server.conf:ro
       - ./data/nginx/ssl:/etc/nginx/ssl
     networks:
       panda-wiki:
@@ -56,6 +57,22 @@ services:
     networks:
       panda-wiki:
         ipv4_address: "${SUBNET_PREFIX:-169.254.15}.2"
+  sidecar:
+    container_name: panda-wiki-sidecar
+    build:
+      context: ./sidecar
+    restart: always
+    depends_on: [postgres]
+    environment:
+      - PORT=8099
+      - JWT_SECRET=${JWT_SECRET}
+      - DATABASE_URL=postgres://panda-wiki:${POSTGRES_PASSWORD}@panda-wiki-postgres:5432/panda-wiki
+      - GITHUB_REPO=${GITHUB_REPO:-chaitin/PandaWiki}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - SELF_VERSION=${SELF_VERSION:-v3.87.5}
+    networks:
+      panda-wiki:
+        ipv4_address: "${SUBNET_PREFIX:-169.254.15}.6"
   consumer:
     container_name: panda-wiki-consumer
     depends_on: [nats, api, raglite]

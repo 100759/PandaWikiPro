@@ -7,6 +7,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Avatar from '../Avatar';
 import Version from './Version';
 import { useAppSelector } from '@/store';
+import { getBasePath } from '@/utils/getBasePath';
 import {
   IconNeirongguanli,
   IconTongjifenxi1,
@@ -93,7 +94,7 @@ const MENUS = [
 
 const Sidebar = () => {
   const { pathname } = useLocation();
-  const { kbDetail } = useAppSelector(state => state.config);
+  const { kbDetail, siteBrand } = useAppSelector(state => state.config);
   const theme = useTheme();
   const navigate = useNavigate();
   const menus = useMemo(() => {
@@ -137,7 +138,10 @@ const Sidebar = () => {
         justifyContent={'center'}
         sx={{ flexShrink: 0 }}
       >
-        <Avatar src={Logo} sx={{ width: 30, height: 30 }} />
+        <Avatar
+          src={siteBrand.site_icon ? getBasePath(siteBrand.site_icon) : Logo}
+          sx={{ width: 30, height: 30 }}
+        />
       </Stack>
       <Box
         sx={{
@@ -149,7 +153,7 @@ const Sidebar = () => {
           borderBottom: `1px solid ${theme.palette.divider}`,
         }}
       >
-        PandaWiki
+        {siteBrand.site_name || 'PandaWiki'}
       </Box>
       <Stack sx={{ py: 2, flexGrow: 1 }} gap={1}>
         {menus.map(it => {
